@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { CacheProvider } from '@emotion/react'
 import { ThemeProvider, CssBaseline } from '@mui/material'
 
+import { QLClientProvider } from '../utility/graphql'
 import createEmotionCache from '../utility/createEmotionCache'
 import darkTheme from '../styles/theme/darkTheme'
 import '../styles/globals.css'
@@ -31,7 +32,9 @@ const MyApp = ({ Component, pageProps, emotionCache = clientSideEmotionCache }) 
           <meta name="theme-color" content="#ffffff"/>
         </Head>
         <CssBaseline />
-        <Component {...pageProps} />
+        <QLClientProvider>
+          <Component {...pageProps} />
+        </QLClientProvider>
       </ThemeProvider>
     </CacheProvider>
   )
