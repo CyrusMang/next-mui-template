@@ -8,10 +8,14 @@ import typeDefs from '../schema'
 
 const { publicRuntimeConfig } = getConfig()
 
-const schema = buildSchema(typeDefs)
-const mockedSchema = addMocksToSchema({ 
-  schema,
-})
+let exchanges = []
+if (publicRuntimeConfig.MOCK_DATA) {
+  const schema = buildSchema(typeDefs)
+  const mockedSchema = addMocksToSchema({ 
+    schema,
+  })
+  exchanges.push(schemaExchange(mockedSchema))
+}
 
 const makeQLClient = () => createClient({
   url: publicRuntimeConfig.GRAPHQL_BACKEND,
@@ -23,7 +27,7 @@ const makeQLClient = () => createClient({
       headers: { authorization: token ? `Bearer ${new Buffer(token).toString('base64')}` : '' },
     }
   },
-  exchanges: [schemaExchange(mockedSchema)]
+  exchanges: exchanges,
 })
 
 const QLClientContext = createContext()

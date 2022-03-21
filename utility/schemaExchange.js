@@ -1,6 +1,6 @@
-import { execute } from 'graphql';
-import { filter, make, mergeMap, pipe, takeUntil } from 'wonka';
-import { Exchange, OperationResult, CombinedError } from 'urql';
+import { execute } from 'graphql'
+import { filter, make, mergeMap, pipe, takeUntil } from 'wonka'
+import { Exchange, OperationResult, CombinedError } from 'urql'
 
 const schemaExchange = (schema) => 
 () => {
@@ -8,11 +8,11 @@ const schemaExchange = (schema) =>
     const fetchResults$ = pipe(
       ops$,
       mergeMap(operation => {
-        const { key } = operation;
+        const { key } = operation
         const teardown$ = pipe(
           ops$,
           filter(op => op.operationName === 'teardown' && op.key === key)
-        );
+        )
 
         return pipe(
           make(i => {
@@ -36,28 +36,28 @@ const schemaExchange = (schema) =>
                           response: result,
                         })
                       : undefined,
-                  });
+                  })
                 }
 
-                complete();
+                complete()
               })
               .catch(error => {
                 next({
                   operation,
                   error: error,
-                });
-                complete();
-              });
+                })
+                complete()
+              })
 
-            return () => {};
+            return () => {}
           }),
           takeUntil(teardown$)
-        );
+        )
       })
-    );
+    )
 
-    return fetchResults$;
-  };
-};
+    return fetchResults$
+  }
+}
 
-export default schemaExchange;
+export default schemaExchange

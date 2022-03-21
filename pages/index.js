@@ -1,6 +1,6 @@
 import { useQuery } from 'urql'
-import Container from '@mui/material/Container'
-import Box from '@mui/material/Box'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
 import Typography from '@mui/material/Typography'
 
 const query = /* GraphQL */ `
@@ -18,14 +18,25 @@ const query = /* GraphQL */ `
 const Home = () => {
   const [result, reexecuteQuery] = useQuery({ query })
   
-  console.log(result)
+  const { data, fetching, error } = result
+  
+  if (fetching) {
+    return '...'
+  }
+  if (error) {
+    return 'error'
+  } 
   
   return (
-    <Container maxwidth='xl'>
-      <Typography variant="h5">
-        {"hello"}
-      </Typography>
-    </Container>
+    <List>
+      {data.posts.map(post => (
+        <ListItem key={post.id}>
+          <Typography variant="h5">
+            {post.title}
+          </Typography>
+        </ListItem>
+      ))}
+    </List>
   )
 }
 
